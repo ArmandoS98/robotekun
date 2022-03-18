@@ -21,42 +21,42 @@ public class Tekun extends AdvancedRobot {
     @Override
     public void run() {
         setAdjustRadarForRobotTurn(true);
-        setBodyColor(new Color(0, 0, 255)); //Set tank background color
+        setBodyColor(new Color(0, 0, 255)); //tank background color
         setGunColor(new Color(50, 50, 20));
         setRadarColor(new Color(200, 200, 70));
         setScanColor(Color.white);
-        setBulletColor(Color.blue);
+        setBulletColor(Color.blue); //Bullet color
         setAdjustGunForRobotTurn(true);
         turnRadarRightRadians(Double.POSITIVE_INFINITY);
     }
 
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
-        double absBearing = e.getBearingRadians() + getHeadingRadians();//enemies absolute bearing
-        double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - absBearing);//enemies later velocity
-        double gunTurnAmt;//amount to turn our gun
-        setTurnRadarLeftRadians(getRadarTurnRemainingRadians());//lock on the radar
+        double absBearing = e.getBearingRadians() + getHeadingRadians();
+        double latVel = e.getVelocity() * Math.sin(e.getHeadingRadians() - absBearing);
+        double gunTurnAmt;
+        setTurnRadarLeftRadians(getRadarTurnRemainingRadians());
         if (Math.random() > .9) {
-            setMaxVelocity((12 * Math.random()) + 12);//randomly change speed
+            setMaxVelocity((12 * Math.random()) + 12);
         }
-        if (e.getDistance() > 150) {//if distance is greater than 150
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);//amount to turn our gun, lead just a little bit
-            setTurnGunRightRadians(gunTurnAmt); //turn our gun
-            setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));//drive towards the enemies predicted future location
-            setAhead((e.getDistance() - 140) * moveDirection);//move forward
-            setFire(3);//fire
-        } else {//if we are close enough...
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);//amount to turn our gun, lead just a little bit
-            setTurnGunRightRadians(gunTurnAmt);//turn our gun
-            setTurnLeft(-90 - e.getBearing()); //turn perpendicular to the enemy
-            setAhead((e.getDistance() - 140) * moveDirection);//move forward
-            setFire(3);//fire
+        if (e.getDistance() > 150) {
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22);
+            setTurnGunRightRadians(gunTurnAmt);
+            setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity()));
+            setAhead((e.getDistance() - 140) * moveDirection);
+            setFire(3);
+        } else {
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
+            setTurnGunRightRadians(gunTurnAmt);
+            setTurnLeft(-90 - e.getBearing());
+            setAhead((e.getDistance() - 140) * moveDirection);
+            setFire(3);
         }
     }
 
     @Override
     public void onHitWall(HitWallEvent event) {
-        moveDirection = -moveDirection;//reverse direction upon hitting a wall
+        moveDirection = -moveDirection;
     }
 
     @Override
